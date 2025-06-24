@@ -1,15 +1,17 @@
 # Flowable Demo – Processus de demande de rente (CdC)
 
-Ce projet montre comment modéliser et exécuter un processus BPMN avec Flowable dans un contexte inspiré de la **Centrale
-de compensation CdC (Genève)**.
+Ce projet démontre l'utilisation de **Flowable** avec **Spring Boot** pour modéliser, déployer et exécuter des processus
+BPMN. Il fournit une API REST pour démarrer des processus et gérer des tâches humaines.
 
 ## 🚀 Fonctionnalités
 
-- Processus BPMN `demandeRenteProcess`
-- API REST pour démarrer une demande
+- Déploiement automatique des fichiers BPMN `demandeRenteProcess`
+- Exposition d'API REST pour démarrer des processus et lister les tâches
 - Exécution de tâches de service Java (`JavaDelegate`)
 - Validation manuelle via tâche utilisateur (prête pour UI)
 - Base de données H2 en mémoire
+- Structure claire pour l'ajout de processus DMN/decision
+- Exemple simple d'un processus
 
 ## 🧪 Lancer les tests
 
@@ -31,7 +33,7 @@ curl -X POST "http://localhost:8888/process/start?demandeId=CDCG-123456"
 
 ## 📊 Interfaces disponibles
 
-- H2 Console : [http://localhost:8888/h2-console](http://localhost:8080/h2-console)
+- H2 Console : [http://localhost:8888/h2-console](http://localhost:8888/h2-console)
 - (UI Flowable en option, à venir)
 
 ## ✅ Badges
@@ -41,17 +43,27 @@ curl -X POST "http://localhost:8888/process/start?demandeId=CDCG-123456"
 ## 📂 Structure du projet
 
 ```bash
-src/
-├── main/java/com/guberan/flowable/demo
-│   ├── FlowableDemoApplication.java
-│   ├── controller/ProcessController.java
-│   ├── delegate/VerifyRequestDelegate.java
-│   └── delegate/PayBenefitDelegate.java
-├── resources/
-│   ├── processes/demande_de_rente.bpmn20.xml
-│   └── application.yml
-└── test/java/com/example/flowabledemo
-    └── FlowableProcessTest.java
+lowabledemo/
+├── src/
+│   ├── main/
+│   │   ├── java/com/guberan/flowable/demo/
+│   │   │   ├── controller/
+│   │   │   │   └── ProcessController.java      # Endpoint REST pour lister les tâches et démarrer un processus
+│   │   │   ├── delegate/
+│   │   │   │   ├── EligibilityCheckDelegate.java    # Delegate Java appelé dans le BPMN (service task)
+│   │   │   │   └── PayBenefitDelegate.java
+│   │   │   ├── model/
+│   │   │   │   └── Person.java                 # Exemple de variable utilisée dans le processus
+│   │   │   └── FlowableDemoApplication.java    # Classe principale Spring Boot
+│   │   └── resources/
+│   │       ├── application.yml                 # Configuration Spring Boot
+│   │       └── processes/
+│   │           └── odemande_de_rente.bpmn20.xml # Définition BPMN déployée automatiquement
+│
+├── pom.xml                                     # Dépendances Maven
+├── .gitignore                                  # Fichiers exclus de Git
+├── README.md                                   # Documentation du projet
+└── docker-compose.yml                          # (optionnel)
 ```
 
 ---
