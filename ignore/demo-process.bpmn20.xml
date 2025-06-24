@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions
+        xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+        xmlns:flowable="http://flowable.org/bpmn"
+        targetNamespace="Examples">
+
+    <process id="demandeRenteProcess" name="Traitement d'une demande de rente" isExecutable="true">
+
+        <startEvent id="startEvent" name="Demande reçue"/>
+
+        <serviceTask id="verifyTask" name="Vérifier la demande"
+                     flowable:class="com.guberan.flowable.demo.delegate.VerifyRequestDelegate"/>
+
+        <businessRuleTask id="eligibilityCheck" name="Vérifier l'éligibilité"
+                          flowable:decisionTableReferenceKey="eligibiliteDecision"/>
+
+        <exclusiveGateway id="eligibilityGateway" name="Éligible ?"/>
+
+        <userTask id="validateTask" name="Valider le calcul"/>
+
+        <serviceTask id="payTask" name="Effectuer le paiement"
+                     flowable:class="com.guberan.flowable.demo.delegate.PayBenefitDelegate"/>
+        <endEvent id="endEvent" name="Terminé"/>
+        <endEvent id="rejectedEvent" name="Rejeté"/>
+        <sequenceFlow id="flow1" sourceRef="startEvent" targetRef="verifyTask"/>
+        <sequenceFlow id="flow2" sourceRef="verifyTask" targetRef="eligibilityCheck"/>
+        <sequenceFlow id="flow3" sourceRef="eligibilityCheck" targetRef="eligibilityGateway"/>
+        <sequenceFlow id="flow4" sourceRef="eligibilityGateway" targetRef="validateTask">
+            <!--            <conditionExpression xsi:type="tFormalExpression"><![CDATA[${eligible}]]></conditionExpression>-->
+        </sequenceFlow>
+        <sequenceFlow id="flow5" sourceRef="eligibilityGateway" targetRef="rejectedEvent">
+            <!--            <conditionExpression xsi:type="tFormalExpression"><![CDATA[${eligible == false}]]></conditionExpression>-->
+        </sequenceFlow>
+        <sequenceFlow id="flow6" sourceRef="validateTask" targetRef="payTask"/>
+        <sequenceFlow id="flow7" sourceRef="payTask" targetRef="endEvent"/>
+
+    </process>
+</definitions>

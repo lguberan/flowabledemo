@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://flowable.org/test"
+             exporter="Flowable Open Source Modeler" exporterVersion="6.8.0">
+    <process id="demandeRenteProcess" name="Traitement d'une demande de rente" isExecutable="true">
+        <startEvent id="startEvent" name="Demande reçue" flowable:formFieldValidation="true"></startEvent>
+        <serviceTask id="verifyTask" name="Vérifier la demande"
+                     flowable:class="com.guberan.flowable.demo.delegate.VerifyRequestDelegate"></serviceTask>
+        <serviceTask id="eligibilityCheck" name="Vérifier la demande"
+                     flowable:class="com.guberan.flowable.demo.delegate.EligibilityCheckDelegate"></serviceTask>
+        <!--        <businessRuleTask id="eligibilityCheck"-->
+        <!--                          name="Vérifier l'éligibilité"-->
+        <!--                          flowable:decisionTableReferenceKey="eligibilite-decision"-->
+        <!--                          flowable:mapDecisionResult="singleResult">-->
+        <!--        </businessRuleTask>-->
+        <exclusiveGateway id="eligibilityGateway" name="Éligible ?"></exclusiveGateway>
+        <userTask id="validateTask" name="Valider le calcul" flowable:formFieldValidation="true"></userTask>
+        <serviceTask id="payTask" name="Effectuer le paiement"
+                     flowable:class="com.guberan.flowable.demo.delegate.PayBenefitDelegate"></serviceTask>
+        <endEvent id="endEvent" name="Terminé"></endEvent>
+        <endEvent id="rejectedEvent" name="Rejeté"></endEvent>
+        <sequenceFlow id="flow1" sourceRef="startEvent" targetRef="verifyTask"></sequenceFlow>
+        <sequenceFlow id="flow3" sourceRef="eligibilityCheck" targetRef="eligibilityGateway"></sequenceFlow>
+        <sequenceFlow id="flow6" sourceRef="validateTask" targetRef="payTask"></sequenceFlow>
+        <sequenceFlow id="flow7" sourceRef="payTask" targetRef="endEvent"></sequenceFlow>
+        <sequenceFlow id="flow2" sourceRef="verifyTask" targetRef="eligibilityCheck"></sequenceFlow>
+        <sequenceFlow id="flow4" sourceRef="eligibilityGateway" targetRef="validateTask">
+            <conditionExpression xsi:type="tFormalExpression">${eligible}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="flow5" sourceRef="eligibilityGateway" targetRef="rejectedEvent">
+            <conditionExpression xsi:type="tFormalExpression">${!eligible}</conditionExpression>
+        </sequenceFlow>
+    </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_demandeRenteProcess">
+        <bpmndi:BPMNPlane bpmnElement="demandeRenteProcess" id="BPMNPlane_demandeRenteProcess">
+            <bpmndi:BPMNShape bpmnElement="startEvent" id="BPMNShape_startEvent">
+                <omgdc:Bounds height="30.0" width="30.0" x="0.0" y="80.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="verifyTask" id="BPMNShape_verifyTask">
+                <omgdc:Bounds height="60.0" width="100.0" x="80.0" y="65.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="eligibilityCheck" id="BPMNShape_eligibilityCheck">
+                <omgdc:Bounds height="60.0" width="100.0" x="230.0" y="65.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="eligibilityGateway" id="BPMNShape_eligibilityGateway">
+                <omgdc:Bounds height="40.0" width="40.0" x="375.0" y="75.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="validateTask" id="BPMNShape_validateTask">
+                <omgdc:Bounds height="60.0" width="100.0" x="506.0" y="0.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="payTask" id="BPMNShape_payTask">
+                <omgdc:Bounds height="60.0" width="100.0" x="656.0" y="0.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="endEvent" id="BPMNShape_endEvent">
+                <omgdc:Bounds height="28.0" width="28.0" x="806.0" y="16.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="rejectedEvent" id="BPMNShape_rejectedEvent">
+                <omgdc:Bounds height="28.0" width="28.0" x="505.0" y="160.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1" flowable:sourceDockerX="15.0"
+                             flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="29.949998618355412" y="95.0"></omgdi:waypoint>
+                <omgdi:waypoint x="80.0" y="95.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="179.95" y="95.0"></omgdi:waypoint>
+                <omgdi:waypoint x="230.0" y="95.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="20.0" flowable:targetDockerY="20.0">
+                <omgdi:waypoint x="329.95000000000005" y="95.0"></omgdi:waypoint>
+                <omgdi:waypoint x="375.0" y="95.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4" flowable:sourceDockerX="20.0"
+                             flowable:sourceDockerY="20.0" flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="414.9231132075467" y="95.0"></omgdi:waypoint>
+                <omgdi:waypoint x="432.0" y="95.0"></omgdi:waypoint>
+                <omgdi:waypoint x="432.0" y="30.0"></omgdi:waypoint>
+                <omgdi:waypoint x="505.9999999999936" y="30.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5" flowable:sourceDockerX="20.0"
+                             flowable:sourceDockerY="20.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+                <omgdi:waypoint x="414.9231132075467" y="95.0"></omgdi:waypoint>
+                <omgdi:waypoint x="432.0" y="95.0"></omgdi:waypoint>
+                <omgdi:waypoint x="432.0" y="175.0"></omgdi:waypoint>
+                <omgdi:waypoint x="505.00090326746044" y="174.1603346547328"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="605.95" y="30.0"></omgdi:waypoint>
+                <omgdi:waypoint x="656.0" y="30.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+                <omgdi:waypoint x="755.9499999999904" y="30.0"></omgdi:waypoint>
+                <omgdi:waypoint x="806.0" y="30.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>

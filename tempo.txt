@@ -1,0 +1,8 @@
+ curl -X POST "http://localhost:8888/start" \
+  -d "demandeId=12345" \
+  -d "documents=incomplets"
+
+
+http://localhost:8888/tasks
+
+curl -X POST "http://localhost:8888/complete-task" -d "taskId=a6c25a68-50d0-11f0-b5ba-9efc7281f20f"

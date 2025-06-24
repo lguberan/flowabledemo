@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="definition" name="Définition d&#39;éligibilité"
+             namespace="http://www.flowable.org/dmn" exporter="Camunda Modeler" exporterVersion="5.36.1">
+    <decision id="eligibilite-decision" name="Décision d&#39;éligibilité">
+        <decisionTable hitPolicy="FIRST">
+            <input id="input1" label="Documents">
+                <inputExpression id="inputExpression1" typeRef="string">
+                    <text>documents</text>
+                </inputExpression>
+            </input>
+            <output id="output1" label="Eligible" name="eligible" typeRef="boolean"/>
+            <rule>
+                <inputEntry>
+                    <text>"complets"</text>
+                </inputEntry>
+                <outputEntry>
+                    <text>true</text>
+                </outputEntry>
+            </rule>
+            <rule>
+                <inputEntry>
+                    <text>"manquants"</text>
+                </inputEntry>
+                <outputEntry>
+                    <text>false</text>
+                </outputEntry>
+            </rule>
+        </decisionTable>
+    </decision>
+</definitions>
