@@ -1,6 +1,7 @@
 # Flowable Demo – Processus de demande de rente (CdC)
 
-Ce projet montre comment modéliser et exécuter un processus BPMN avec Flowable dans un contexte inspiré de la **Centrale de compensation CdC (Genève)**.
+Ce projet montre comment modéliser et exécuter un processus BPMN avec Flowable dans un contexte inspiré de la **Centrale
+de compensation CdC (Genève)**.
 
 ## 🚀 Fonctionnalités
 
@@ -11,22 +12,26 @@ Ce projet montre comment modéliser et exécuter un processus BPMN avec Flowable
 - Base de données H2 en mémoire
 
 ## 🧪 Lancer les tests
+
 ```bash
 ./mvnw test
 ```
 
 ## 🖥️ Lancer l'application
+
 ```bash
 ./mvnw spring-boot:run
 ```
 
 Puis démarrer un processus :
+
 ```bash
-curl -X POST "http://localhost:8080/process/start?demandeId=CDCG-123456"
+curl -X POST "http://localhost:8888/process/start?demandeId=CDCG-123456"
 ```
 
 ## 📊 Interfaces disponibles
-- H2 Console : [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
+
+- H2 Console : [http://localhost:8888/h2-console](http://localhost:8080/h2-console)
 - (UI Flowable en option, à venir)
 
 ## ✅ Badges
@@ -37,13 +42,13 @@ curl -X POST "http://localhost:8080/process/start?demandeId=CDCG-123456"
 
 ```bash
 src/
-├── main/java/com/example/flowabledemo
+├── main/java/com/guberan/flowable/demo
 │   ├── FlowableDemoApplication.java
-│   ├── ProcessController.java
-│   ├── VerifyRequestDelegate.java
-│   └── PayBenefitDelegate.java
+│   ├── controller/ProcessController.java
+│   ├── delegate/VerifyRequestDelegate.java
+│   └── delegate/PayBenefitDelegate.java
 ├── resources/
-│   ├── processes/demo-process.bpmn20.xml
+│   ├── processes/demande_de_rente.bpmn20.xml
 │   └── application.yml
 └── test/java/com/example/flowabledemo
     └── FlowableProcessTest.java
